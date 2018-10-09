@@ -1,5 +1,7 @@
 ![Zipper](https://github.com/sebastiandev/zipper/blob/master/logo.png)
 
+( encryption and decryption with password option is added and a bug fixed)
+
 C++ wrapper around minizip compression library
 
 **Zipper**'s goal is to bring the power and simplicity of minizip to a more object oriented/c++ user friendly library.
