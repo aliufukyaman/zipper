@@ -15,6 +15,7 @@ namespace zipper
   std::string parentDirectory(const std::string& filepath);
   std::string currentPath();
   bool isDirectory(const std::string& path);
+  bool isExist(const std::string& path);
   std::vector<std::string> filesFromDirectory(const std::string& path);
   std::string fileNameFromPath(const std::string& path);
 }

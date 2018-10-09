@@ -6,6 +6,7 @@
 #include <CDirEntry.h>
 
 #include <cstdio>
+#include <iostream>
 
 #if defined(WIN32) && !defined(CYGWIN)
 #  include "tps/dirent.h"
@@ -40,6 +41,7 @@ namespace zipper {
 
     } while (size_read > 0);
 
+	input_stream.clear();
     input_stream.seekg(0);
     result_crc = calculate_crc;
   }
@@ -84,6 +86,11 @@ namespace zipper {
   bool isDirectory(const std::string& path)
   {
     return CDirEntry::isDir(path);
+  }
+
+  bool isExist(const std::string& path)
+  {
+	  return CDirEntry::exist(path);
   }
 
   std::string parentDirectory(const std::string& filepath)

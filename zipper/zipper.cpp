@@ -30,9 +30,10 @@ namespace zipper {
 			int mode = 0;
 			int flags = Zipper::Append;
 
+			//? changed by me, check later for not to append or add it as option
 			/* open the zip file for output */
 			if (checkFileExists(filename))
-				mode = (flags & Zipper::Overwrite) ? APPEND_STATUS_CREATE : APPEND_STATUS_ADDINZIP;
+				mode = (flags & Zipper::Overwrite) ? APPEND_STATUS_CREATE : APPEND_STATUS_CREATE;
 			else
 				mode = APPEND_STATUS_CREATE;
 
@@ -87,7 +88,7 @@ namespace zipper {
 			return m_zf != NULL;
 		}
 
-		bool add(std::istream& input_stream, const std::string& nameInZip, const std::string& password, int flags)
+		bool add(std::istream& input_stream, const std::string& nameInZip, const std::string& password, int compLevel)
 		{
 			if (!m_zf) return false;
 
@@ -106,8 +107,7 @@ namespace zipper {
 			if (nameInZip.empty())
 				return false;
 
-			if (flags & Zipper::Faster) compressLevel = 1;
-			if (flags & Zipper::Better) compressLevel = 9;
+			compressLevel = compLevel;
 
 			zip64 = (int)isLargeFile(input_stream);
 			if (password.empty())
@@ -250,12 +250,12 @@ namespace zipper {
 		close();
 	}
 
-	bool Zipper::add(std::istream& source, const std::string& nameInZip, zipFlags flags)
+	bool Zipper::add(std::istream& source, const std::string& nameInZip, int compLevel)
 	{
-		return m_impl->add(source, nameInZip, "", flags);
+		return m_impl->add(source, nameInZip, m_password, compLevel);
 	}
 
-	bool Zipper::add(const std::string& fileOrFolderPath, zipFlags flags)
+	bool Zipper::add(const std::string& fileOrFolderPath, int compLevel)
 	{
 		if (isDirectory(fileOrFolderPath))
 		{
@@ -266,14 +266,14 @@ namespace zipper {
 			{
 				std::ifstream input(it->c_str(), std::ios::binary);
 				std::string nameInZip = it->substr(it->rfind(folderName + CDirEntry::Separator), it->size());
-				add(input, nameInZip, flags);
+				add(input, nameInZip, compLevel);
 				input.close();
 			}
 		}
 		else
 		{
 			std::ifstream input(fileOrFolderPath.c_str(), std::ios::binary);
-			add(input, fileNameFromPath(fileOrFolderPath), flags);
+			add(input, fileNameFromPath(fileOrFolderPath), compLevel);
 			input.close();
 		}
 
